@@ -21,16 +21,16 @@ body {
 }
 
 .popup {
-  max-width: 300px;
+  width: 20vw;
+  padding: 1rem;
+ 
 }
 
-.entry-form label{
-
-margin: 0.5rem;
-display: block;
-}
-.entry-form input{
-
-  margin: 0.5rem;
+.entry-form input,
+.entry-form label,
+.entry-form button{
+  font-size: 1rem;
+  width: 100%;
+  margin: 0.3rem 0;
   display: block;
-  }
+}

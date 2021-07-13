@@ -124,7 +124,7 @@ const App =  ()=> {
                 onClose={() => setAddPlaceLocation(null)}
                 anchor="top" >
                 <div className = "popup">
-                  <PlaceEntryForm/>
+                  <PlaceEntryForm location={addPlaceLocation}/>
                 </div>
               </Popup>
             </>
