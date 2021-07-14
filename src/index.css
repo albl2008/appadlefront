@@ -26,6 +26,11 @@ body {
  
 }
 
+.login{
+  color: red;
+  margin-right: 0px;
+}
+
 .entry-form input,
 .entry-form label,
 .entry-form button{
