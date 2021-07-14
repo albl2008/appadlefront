@@ -13,16 +13,19 @@ const App =  ()=> {
   const [viewport, setViewport] = useState({
     width: '100%vw',
     height: '100vh',
-    latitude: 37.7577,
-    longitude: -122.4376,
-    zoom: 3
+    latitude: -33.032542,
+    longitude: -68.887292,
+    zoom: 10
   });
+
+  const getPlaces = async () => {
+    const places = await listPlaceEntries();
+    setPlaces(places);
+  }
 
   useEffect(()=>{
     (async () => {
-     const places = await listPlaceEntries();
-     setPlaces(places);
-     console.log(places);
+     getPlaces();
     })();
     
   },[]);
@@ -44,9 +47,9 @@ const App =  ()=> {
     >
       {
         places.map(entry => (
-          <>
+          <React.Fragment key = {entry._id}>
           <Marker 
-            key = {entry._id}
+            
             latitude={entry.latitude} 
             longitude={entry.longitude} 
             >
@@ -90,7 +93,7 @@ const App =  ()=> {
           </Popup>
           ) : null
           }
-          </>
+          </React.Fragment>
         ))
       }
         {
@@ -124,7 +127,10 @@ const App =  ()=> {
                 onClose={() => setAddPlaceLocation(null)}
                 anchor="top" >
                 <div className = "popup">
-                  <PlaceEntryForm location={addPlaceLocation}/>
+                  <PlaceEntryForm onClose= { () => {
+                     setAddPlaceLocation(null);
+                     getPlaces();
+                  }} location={addPlaceLocation}/>
                 </div>
               </Popup>
             </>
