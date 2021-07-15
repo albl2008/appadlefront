@@ -1,9 +1,12 @@
 import React from 'react';
-import { useState , useEffect } from 'react';
+import { useState , useEffect, useRef, useCallback } from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
+import Geocoder from 'react-map-gl-geocoder'
 
 import { listPlaceEntries } from './API'; 
 import PlaceEntryForm from './PlaceEntryForm'
+
+//const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN
 
 
 export const Map = () => {
@@ -17,6 +20,13 @@ export const Map = () => {
         longitude: -68.887292,
         zoom: 10
     });
+    const mapRef = useRef();
+    const handleViewportChange = useCallback(
+      (newViewport) => setViewport(newViewport),
+      []
+    );
+
+
 
     const getPlaces = async () => {
         const places = await listPlaceEntries();
@@ -38,12 +48,27 @@ export const Map = () => {
         })
       }
 
+      const handleGeocoderViewportChange = useCallback(
+        (newViewport) => {
+          const geocoderDefaultOverrides = { transitionDuration: 1000 };
+    
+          return handleViewportChange({
+            ...newViewport,
+            ...geocoderDefaultOverrides
+          });
+        },
+        []
+      );
+    
+      
       return (
         <div>
         <ReactMapGL
+          ref={mapRef}
           {...viewport}
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-          onViewportChange={nextViewport => setViewport(nextViewport)}
+          //onViewportChange={nextViewport => setViewport(nextViewport)}
+          onViewportChange={handleViewportChange}
           onDblClick = {showAddPlacePopup}
         >
           {
@@ -81,7 +106,7 @@ export const Map = () => {
                 latitude={entry.latitude} 
                 longitude={entry.longitude} 
                 closeButton={true}
-                closeOnClick={false}
+                closeOnClick={true}
                 dynamicPosition={true}
                 onClose={() => setShowPopup({})}
                 anchor="top" >
@@ -139,6 +164,12 @@ export const Map = () => {
     
               ): null
             }
+             <Geocoder
+                mapRef={mapRef}
+                onViewportChange={handleGeocoderViewportChange}
+                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                position="top-right"
+              />
           </ReactMapGL>
           </div>
       );
